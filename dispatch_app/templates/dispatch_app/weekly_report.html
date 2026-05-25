@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neura BTM Dispatch - Weekly Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .kpi-card { border-radius: 10px; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        .kpi-card:hover { transform: translateY(-3px); }
+        .chart-container { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body class="container py-5">
+
+    <header class="mb-5 border-bottom pb-3">
+        <h1 class="display-5 fw-bold text-dark">BTM Battery Dispatch Report</h1>
+        <p class="text-muted fs-5">Weekly Performance & Savings Dashboard (Cyprus Hotel 200kWp / 400kWh)</p>
+    </header>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card kpi-card bg-white h-100 p-3 border-start border-4 border-danger">
+                <h6 class="text-muted text-uppercase mb-1">Grid Spend (No Battery)</h6>
+                <h3 class="fw-bold mb-0">€{{ total_grid_spend_no_battery }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card bg-white h-100 p-3 border-start border-4 border-primary">
+                <h6 class="text-muted text-uppercase mb-1">Grid Spend (With Battery)</h6>
+                <h3 class="fw-bold mb-0">€{{ total_grid_spend_with_battery }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card bg-success text-white h-100 p-3 shadow">
+                <h6 class="text-white-50 text-uppercase mb-1">Total Savings</h6>
+                <h3 class="fw-bold mb-0">€{{ savings }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card bg-dark text-white h-100 p-3">
+                <h6 class="text-white-50 text-uppercase mb-1">Estimated ROI (+5% deg.)</h6>
+                <h3 class="fw-bold mb-0">{{ estimated_roi_years }} Years</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card kpi-card bg-white h-100 p-3">
+                <h6 class="text-muted text-uppercase mb-1">Total Charged</h6>
+                <h4 class="fw-bold text-primary mb-0">{{ total_charged_kwh }} kWh</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card kpi-card bg-white h-100 p-3">
+                <h6 class="text-muted text-uppercase mb-1">Total Discharged</h6>
+                <h4 class="fw-bold text-warning mb-0">{{ total_discharged_kwh }} kWh</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card kpi-card bg-white h-100 p-3">
+                <h6 class="text-muted text-uppercase mb-1">Solar Self-Consumption</h6>
+                <h4 class="fw-bold text-success mb-0">{{ self_consumption_pct }}%</h4>
+            </div>
+        </div>
+    </div>
+
+<div class="card chart-container p-4 mt-4 mb-5 border-0 shadow-sm">
+        <h5 class="mb-4 text-primary">Battery State of Charge (SoC)</h5>
+        <canvas id="socChart" height="150"></canvas>
+    </div>
+
+    <script>
+        const labels = {{ labels|safe }};
+        const socData = {{ soc_data|safe }};
+
+        const ctx = document.getElementById('socChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'State of Charge (%)',
+                    data: socData,
+                    borderColor: '#198754',
+                    backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    pointRadius: 0,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100, title: { display: true, text: 'SoC (%)' } },
+                    x: { ticks: { maxTicksLimit: 14 } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
