@@ -7,8 +7,8 @@ I build this using Python 3. 12 and SQLite. To run the simulation locally:
 1. **Clone this repository** to your local machine.
 2. **Create and activate a virtual environment**:
    python -m venv env
-   Windows: .\env\Scripts\activate
-   Mac/Linux: source env/bin/activate
+   * Windows: .\env\Scripts\activate
+   * Mac/Linux: source env/bin/activate
 3. **Install dependencies**:
     pip install -r requirements.txt
 4. **Load the initial data into the SQLite database**:
